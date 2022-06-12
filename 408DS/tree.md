@@ -127,5 +127,188 @@ $((15\div(7-(1+1)))\times3)-(2+(1+1))$
 中缀表达式转化为后缀表达式的步骤如下：
 
 1. 确定运算顺序
-   $((15\div(7-(1+1)))\times3)-(2+(1+1))$
-2. 
+左优先：左边的运算符能先计算，就优先算左边
+![RPNconvert](picture/converToRPN.drawio.png)
+
+2. (左操作数 右操作数 操作数)->新操作数
+   15 7 1 1 + - / 3 * 2 1 1 + + -
+   对应的表达式树如下:
+  
+  ![RPNTree](picture/BiTree_RPN.drawio.png)
+可以看出，中缀表达式就是这个二叉树的中序遍历序列，后缀表达式就是这个二叉树的后序遍历序列
+
+### 栈实现中缀表达式转化为后缀表达式
+
+1. 栈保存暂时不能确定运算顺序的运算符
+2. 操作数直接加入表达式
+3. 界限符：'('加入栈，')'则弹出栈内运算符加入表达式，直到弹出'('
+4. 运算符：弹出栈内比当前运算符优先级高或等于的所有运算符，直到栈空或遇到'('，再将当前运算符入栈
+5. 处理完所有字符，弹出栈内剩余运算符
+
+![stack_convertRPN](picture/stack_expressToRPN.drawio.png)
+
+### 栈实现中缀求值
+
+两栈：操作数栈和运算符栈
+从左往右扫：
+
+- 扫到操作数，压入操作数栈
+- 扫到界限符或操作符，按上文逻辑压入/弹出运算符栈
+- 每弹出一个运算符，弹出两个操作数，执行运算后作为新操作数压回操作数栈
+
+## 二叉树遍历的非递归算法
+
+~~~c
+
+void inOrder(BiTree T){
+    InitStack(S);
+    BiTree p = T;
+    while(p||!IsEmpty(S)){
+        if(p){
+            push(S,p);
+            p=p->child;
+        }
+        else{
+            pop(S,p);
+            visit(p);
+            p = p->rchild;
+        }
+    }
+}
+
+void preOrder(BiTree T){
+    InitStack(S);
+    BiTree p = T;
+    while(p||!IsEmpty(S)){
+        if(p){
+            visit(p);
+            push(S,p);
+            p=p->child;
+        }
+        else{
+            pop(S,p);
+            p = p->rchild;
+        }
+    }
+}
+~~~
+
+## 层序遍历
+
+~~~c
+void levelOrder(BiTree T){
+    InitQueue(Q);
+    BiTree p;
+    Enqueue(Q, T);
+    while(!isEmpty(Q)){
+        Dequeue(Q,p);
+        visit(p);
+        if(p->lchild!=NULL) Enqueue(Q, p->lchild);
+        if(p->lchildr=NULL) Enqueue(Q, p->rchild);
+    }
+}
+~~~
+
+## 遍历序列构造二叉树
+
+中序序列+任一其他一种序列可以唯一确定一颗二叉树
+
+先序序列：第一个元素是根节点
+
+后序序列：最后一个元素是根节点
+
+中序序列：根节点左边是左子树，根节点右边是右子树
+
+## 线索二叉树
+
+二叉链表只能体现一种父子关系，而不能直接得到节点在遍历中的前驱或后继。二叉树有n+1个空链域，于是便有利用这些空链域来找到遍历前驱或后继，这便是线索化。线索二叉树就是为了加快查找节点前驱和后继的速度
+
+![Thread_struct](picture/BiTree_ThreadStorage.drawio.png)
+
+当ltag/rtag=0,lchild/rchild指向左/右孩子；ltag/rtag=1，lchild/rchild指向前驱/后继
+
+~~~c
+typedef struct ThreadNode{
+    Elemtype data;
+    ThreadNode * lchild,rchild;
+    int ltag,rtag
+}*ThreadTree, ThreadNode
+
+~~~
+
+实际上构造线索二叉树的办法本质上是遍历二叉树，只是visit()上的不同而已
+
+~~~c
+void inThread(ThreadTree &p, ThreadTree &pre){
+    if(p!=NULL){
+        inThread(p->lchild, pre);
+        if(p->lchild == NULL){//左子树空，指向前驱
+            p->lchild = pre;
+            p->ltag = 1;
+        }
+        if(pre != NULL && pre->rchild == NULL){//右子树空，指向后继
+            pre->rchild = p;
+            pre ->rtag = 1;
+        }
+        pre = p;
+        inThread(p->rchild. pre);
+    }
+}
+~~~
+
+前序和后序的实现类似，不再赘述
+
+### 中序线索二叉树的遍历
+
+~~~c
+ThreadNode * FirstNode(ThreadNode* p){//寻找p子树中序序列的第一个节点
+    while(p->tag == 0) p = p->lchild;
+    return p;
+}
+
+ThreadNode * NextNode(ThreadNode* p){
+    if(p->rtag == 0)return FirstNode(p->rchild);
+    else return p->rchild;
+}
+
+void inOrder(ThreadNode* T){
+    for(ThreadNode *p = FirstNode(T);p!=NULL; p = NextNode(p);){
+        visit(p);
+    }
+}
+~~~
+
+若rtag=0,说明p右子树不为空，根据中序遍历的性质，p的后继为**p右子树中序序列的第一个节点，即FirstNode(p->rchild)**
+
+同理也可以得到逆向中序序列的算法，只要把上述算法中r和l互换即可
+### 先序线索二叉树和后序线索二叉树
+
+先序线索二叉树寻找前驱/后序线索二叉树寻找后继都需要知道父节点的信息
+
+# 树，森林
+
+## 树的存储结构
+
+## 树，森林，二叉树三者之间的转换
+
+### 树和二叉树
+
+### 森林和二叉树
+
+# 树和二叉树的应用
+
+## 哈夫曼树和哈夫曼编码
+
+### 哈夫曼树
+
+### 哈夫曼编码
+
+## 并查集
+
+>并察集是新考点，以408的趋势，很可能进行考察
+
+### 集合的概念
+
+### 存储结构
+
+### 并，查的实现以及优化
