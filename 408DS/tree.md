@@ -45,8 +45,8 @@
 
 ~~~c
 typedef struct BiTNode{
-    int data;
-    BinNode *lchild, *rchild;
+	int data;
+	BinNode *lchild, *rchild;
 }BitNode, *BiTree
 ~~~
 
@@ -64,11 +64,11 @@ typedef struct BiTNode{
 
 ~~~c
   void preOrder(BiTree T){
-    if(T!=NULL){//不为空树，访问
-      visit(T);//自定义的访问函数
-      preOrder(T->lchild);//遍历左子树
-      preOrder(T->rchild);//遍历右子树
-    }
+	if(T!=NULL){//不为空树，访问
+	  visit(T);//自定义的访问函数
+	  preOrder(T->lchild);//遍历左子树
+	  preOrder(T->rchild);//遍历右子树
+	}
   }
 ~~~
 
@@ -76,11 +76,11 @@ typedef struct BiTNode{
 
 ~~~c
   void inOrder(BiTree T){
-    if(T!=NULL){//不为空树，访问
-      inOrder(T->lchild);//遍历左子树
-      visit(T);//自定义的访问函数
-      inOrder(T->rchild);//遍历右子树
-    }
+	if(T!=NULL){//不为空树，访问
+	  inOrder(T->lchild);//遍历左子树
+	  visit(T);//自定义的访问函数
+	  inOrder(T->rchild);//遍历右子树
+	}
   }
 ~~~
 
@@ -88,11 +88,11 @@ typedef struct BiTNode{
 
 ~~~c
   void postOrder(BiTree T){
-    if(T!=NULL){//不为空树，访问
-      postOrder(T->lchild);//遍历左子树
-      postOrder(T->rchild);//遍历右子树
-      visit(T);//自定义的访问函数
-    }
+	if(T!=NULL){//不为空树，访问
+	  postOrder(T->lchild);//遍历左子树
+	  postOrder(T->rchild);//遍历右子树
+	  visit(T);//自定义的访问函数
+	}
   }
 ~~~
 
@@ -161,35 +161,35 @@ $((15\div(7-(1+1)))\times3)-(2+(1+1))$
 ~~~c
 
 void inOrder(BiTree T){
-    InitStack(S);
-    BiTree p = T;
-    while(p||!IsEmpty(S)){
-        if(p){
-            push(S,p);
-            p=p->child;
-        }
-        else{
-            pop(S,p);
-            visit(p);
-            p = p->rchild;
-        }
-    }
+	InitStack(S);
+	BiTree p = T;
+	while(p||!IsEmpty(S)){
+		if(p){
+			push(S,p);
+			p=p->child;
+		}
+		else{
+			pop(S,p);
+			visit(p);
+			p = p->rchild;
+		}
+	}
 }
 
 void preOrder(BiTree T){
-    InitStack(S);
-    BiTree p = T;
-    while(p||!IsEmpty(S)){
-        if(p){
-            visit(p);
-            push(S,p);
-            p=p->child;
-        }
-        else{
-            pop(S,p);
-            p = p->rchild;
-        }
-    }
+	InitStack(S);
+	BiTree p = T;
+	while(p||!IsEmpty(S)){
+		if(p){
+			visit(p);
+			push(S,p);
+			p=p->child;
+		}
+		else{
+			pop(S,p);
+			p = p->rchild;
+		}
+	}
 }
 ~~~
 
@@ -197,15 +197,15 @@ void preOrder(BiTree T){
 
 ~~~c
 void levelOrder(BiTree T){
-    InitQueue(Q);
-    BiTree p;
-    Enqueue(Q, T);
-    while(!isEmpty(Q)){
-        Dequeue(Q,p);
-        visit(p);
-        if(p->lchild!=NULL) Enqueue(Q, p->lchild);
-        if(p->lchildr=NULL) Enqueue(Q, p->rchild);
-    }
+	InitQueue(Q);
+	BiTree p;
+	Enqueue(Q, T);
+	while(!isEmpty(Q)){
+		Dequeue(Q,p);
+		visit(p);
+		if(p->lchild!=NULL) Enqueue(Q, p->lchild);
+		if(p->lchildr=NULL) Enqueue(Q, p->rchild);
+	}
 }
 ~~~
 
@@ -229,9 +229,9 @@ void levelOrder(BiTree T){
 
 ~~~c
 typedef struct ThreadNode{
-    Elemtype data;
-    ThreadNode * lchild,rchild;
-    int ltag,rtag
+	Elemtype data;
+	ThreadNode * lchild,rchild;
+	int ltag,rtag
 }*ThreadTree, ThreadNode
 
 ~~~
@@ -240,19 +240,19 @@ typedef struct ThreadNode{
 
 ~~~c
 void inThread(ThreadTree &p, ThreadTree &pre){
-    if(p!=NULL){
-        inThread(p->lchild, pre);
-        if(p->lchild == NULL){//左子树空，指向前驱
-            p->lchild = pre;
-            p->ltag = 1;
-        }
-        if(pre != NULL && pre->rchild == NULL){//右子树空，指向后继
-            pre->rchild = p;
-            pre ->rtag = 1;
-        }
-        pre = p;
-        inThread(p->rchild. pre);
-    }
+	if(p!=NULL){
+		inThread(p->lchild, pre);
+		if(p->lchild == NULL){//左子树空，指向前驱
+			p->lchild = pre;
+			p->ltag = 1;
+		}
+		if(pre != NULL && pre->rchild == NULL){//右子树空，指向后继
+			pre->rchild = p;
+			pre ->rtag = 1;
+		}
+		pre = p;
+		inThread(p->rchild. pre);
+	}
 }
 ~~~
 
@@ -262,19 +262,19 @@ void inThread(ThreadTree &p, ThreadTree &pre){
 
 ~~~c
 ThreadNode * FirstNode(ThreadNode* p){//寻找p子树中序序列的第一个节点
-    while(p->tag == 0) p = p->lchild;
-    return p;
+	while(p->tag == 0) p = p->lchild;
+	return p;
 }
 
 ThreadNode * NextNode(ThreadNode* p){
-    if(p->rtag == 0)return FirstNode(p->rchild);
-    else return p->rchild;
+	if(p->rtag == 0)return FirstNode(p->rchild);
+	else return p->rchild;
 }
 
 void inOrder(ThreadNode* T){
-    for(ThreadNode *p = FirstNode(T);p!=NULL; p = NextNode(p);){
-        visit(p);
-    }
+	for(ThreadNode *p = FirstNode(T);p!=NULL; p = NextNode(p);){
+		visit(p);
+	}
 }
 ~~~
 
@@ -309,6 +309,74 @@ void inOrder(ThreadNode* T){
 
 ### 集合的概念
 
+集合实际上描述的是两个元素之间的关系
+
 ### 存储结构
 
+通常用树来表示集合；同一自己的元素组成一棵树，各个树组成的森林构成全集
+
+在并查集中，找到元素所在树的根节点是非常频繁的操作，故采用**双亲表示法**存储并查集
+
+~~~c
+int UFsets[Size];//并查集数组
+
+void initial(int s[]){
+ 	for(int i = 0; i < size; i++){
+		s[i]=-1;//-1表示根节点
+  	}
+}
+
+~~~
+
 ### 并，查的实现以及优化
+
+查找：即判断元素属于哪个集合，找到树的根结点
+
+~~~c
+int find(int s[],int x){
+	while(s[x]>=0){
+		x=s[x];
+	}
+	return x;
+~~~
+
+并：让一棵树成为另一棵树的子树
+
+~~~c
+void union(int s[],int root1, int root2){
+	if(root1 == root2) return;
+	s[root2]=root;//root2合并到root1上
+}
+~~~
+
+并操作可能会使大树合并到小树下面，导致树的高度增高，而查找效率取决于树的高度，从而导致并查集查找效率降低
+
+并操作优化：小树成为大树的子树
+~~~c
+void union(int s[], int root1, int root2){
+	if(root1==root2)return;
+	if(s[root2]>s[root1]){//根节点数组值为负值，越大的值对应的节点数更少
+		s[root1]+=s[root2];
+		s[root2] = s[root1];
+	}
+	else{
+		s[root2]+=s[root1];
+		s[root1] = s[root2];
+	}
+}
+
+~~~
+
+查操作优化：找到根节点后，将查找路径上的元素挂载到根节点下
+
+~~~c
+int find(int s[], int x){}
+	int root = x;
+	while(s[root]>=0)root=s[root];
+	while(x!=root){
+		int t = s[x];
+		s[x] = root;
+		x = t;
+	}
+	return root;
+~~~
